@@ -32,7 +32,6 @@ public class RangerPolicyMigrationTool {
     config.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
     config.set("hadoop.security.authentication", "kerberos");
     UserGroupInformation.setConfiguration(config);
-    UserGroupInformation.loginUserFromKeytab(args[1], args[2]);
     RangerPolicyMigrationTool rangerPolicyMigrationTool = new RangerPolicyMigrationTool();
     rangerPolicyMigrationTool.listFiles(uri, config);
     bufferedWriter.close();
