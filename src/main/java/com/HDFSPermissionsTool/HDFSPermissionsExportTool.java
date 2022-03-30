@@ -1,10 +1,12 @@
-package com.RangerPolicyTool;
+package com.HDFSPermissionsTool;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -13,7 +15,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.security.UserGroupInformation;
 
-public class RangerPolicyMigrationTool {
+public class HDFSPermissionsExportTool {
   public static String domain;
   public static String uri;
   public static String source;
@@ -27,15 +29,17 @@ public class RangerPolicyMigrationTool {
     domain = args[0];
     source = args[1];
     uri = "hdfs://" + domain + source;
-    outputFile = new File("RangerPolicy.csv");
-    fileWriter = new FileWriter("RangerPolicy.csv");
+    String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+    String fileName = "HDFS_Permissions_Export_" + timestamp + ".csv";
+    outputFile = new File(fileName);
+    fileWriter = new FileWriter(fileName);
     bufferedWriter =  new BufferedWriter(fileWriter);
     config.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
     config.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
     config.set("hadoop.security.authentication", "kerberos");
     UserGroupInformation.setConfiguration(config);
-    RangerPolicyMigrationTool rangerPolicyMigrationTool = new RangerPolicyMigrationTool();
-    rangerPolicyMigrationTool.listFiles(uri, config);
+    HDFSPermissionsExportTool HDFSPermissionExportTool = new HDFSPermissionsExportTool();
+    HDFSPermissionExportTool.listFiles(uri, config);
     bufferedWriter.close();
     fileWriter.close();
   }
