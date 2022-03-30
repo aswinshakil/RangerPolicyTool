@@ -49,22 +49,44 @@ public class RangerPolicyMigrationTool {
       String userPermission = getPermission(status.getPermission().getUserAction());
       String groupPermission = getPermission(status.getPermission().getGroupAction());
       String otherPermission = getPermission(status.getPermission().getOtherAction());
-      if (userPermission != null) {
-        bufferedWriter.write("\"" + getPath(status.getPath()) + "\"|\""
-            + status.getOwner() + "\"||\"" + userPermission + "\"" + newLine);
-      }
+
+      String groupString;
+      boolean skipUser = false;
       if (groupPermission != null && groupPermission.equals(otherPermission)) {
-        bufferedWriter.write("\"" + getPath(status.getPath()) + "\"||\""
-            + status.getGroup() + ", public"+ "\"|\"" + groupPermission + "\"" + newLine);
+        groupString = "\"" + status.getGroup() + ", public"+ "\"";
+        if(groupPermission.equals(userPermission)) {
+          bufferedWriter.write("\"" + getPath(status.getPath()) + "\"|\""
+              + status.getOwner() + "\"|"+ groupString +"|\"" + userPermission + "\"" + newLine);
+          skipUser = true;
+        } else {
+          bufferedWriter.write("\"" + getPath(status.getPath()) + "\"||" +
+              groupString +"|\"" + groupPermission + "\"" + newLine);
+        }
       } else {
         if (groupPermission != null) {
-          bufferedWriter.write("\"" + getPath(status.getPath()) + "\"||\""
-              + status.getGroup() + "\"|\"" + groupPermission + "\"" + newLine);
+          if(groupPermission.equals(userPermission)) {
+            bufferedWriter.write("\"" + getPath(status.getPath()) + "\"|\""
+                + status.getOwner() + "\"|\""+ status.getGroup() +"\"|\"" + userPermission + "\"" + newLine);
+            skipUser = true;
+          } else {
+            bufferedWriter.write("\"" + getPath(status.getPath()) + "\"||\""
+                + status.getGroup() + "\"|\"" + groupPermission + "\"" + newLine);
+          }
         }
         if (otherPermission != null) {
-          bufferedWriter.write("\"" + getPath(status.getPath())
-              + "\"||\"public\"|\"" + otherPermission + "\"" + newLine);
+          if(otherPermission.equals(userPermission)) {
+            bufferedWriter.write("\"" + getPath(status.getPath()) + "\"|\""
+                + status.getOwner() + "\"|\"public\"|\"" + userPermission + "\"" + newLine);
+            skipUser = true;
+          } else {
+            bufferedWriter.write("\"" + getPath(status.getPath())
+                + "\"||\"public\"|\"" + otherPermission + "\"" + newLine);
+          }
         }
+      }
+      if (!skipUser && userPermission != null) {
+        bufferedWriter.write("\"" + getPath(status.getPath()) + "\"|\""
+            + status.getOwner() + "\"||\"" + userPermission + "\"" + newLine);
       }
       if(status.isDirectory()) {
         listFiles(status.getPath().toString(), config);
