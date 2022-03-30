@@ -16,6 +16,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 public class RangerPolicyMigrationTool {
   public static String domain;
   public static String uri;
+  public static String source;
   public static String newLine = System.lineSeparator();
   public static File outputFile;
   public static FileWriter fileWriter;
@@ -24,7 +25,8 @@ public class RangerPolicyMigrationTool {
   public static void main(String args[]) throws IOException {
     Configuration config = new Configuration();
     domain = args[0];
-    uri = "hdfs://" + domain +"/";
+    source = args[1];
+    uri = "hdfs://" + domain + source;
     outputFile = new File("RangerPolicy.csv");
     fileWriter = new FileWriter("RangerPolicy.csv");
     bufferedWriter =  new BufferedWriter(fileWriter);
