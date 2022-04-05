@@ -12,10 +12,6 @@ mvn clean install
 ```
 Once the build is complete under `target` there will be a jar `HDFSPermissionsExportTool-1.0-SNAPSHOT.jar`. Run it using the following command,
 ``` 
-java -jar ./target/HDFSPermissionsExportTool-1.0-SNAPSHOT.jar hdfs_namenode:hdfs_port source_directory
-
-(or)
-
 hadoop jar ./target/HDFSPermissionsExportTool-1.0-SNAPSHOT.jar hdfs_namenode:hdfs_port source_directory
 
 

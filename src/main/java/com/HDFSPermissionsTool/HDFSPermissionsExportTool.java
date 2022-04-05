@@ -34,8 +34,6 @@ public class HDFSPermissionsExportTool {
     outputFile = new File(fileName);
     fileWriter = new FileWriter(fileName);
     bufferedWriter =  new BufferedWriter(fileWriter);
-    config.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-    config.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
     config.set("hadoop.security.authentication", "kerberos");
     UserGroupInformation.setConfiguration(config);
     HDFSPermissionsExportTool HDFSPermissionExportTool = new HDFSPermissionsExportTool();
